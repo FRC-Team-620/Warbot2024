@@ -1,5 +1,7 @@
 package org.jmhsrobotics.frc2024.subsystems.drive.commands.auto;
 
+import javax.xml.crypto.dsig.Transform;
+
 import org.jmhsrobotics.frc2024.subsystems.drive.DriveSubsystem;
 import org.jmhsrobotics.frc2024.subsystems.vision.VisionSubsystem;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -7,6 +9,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,6 +25,8 @@ public class NoteHunterCommand extends Command {
 	private double xGoal;
 	private double yGoal;
 	private double thetaGoal;
+
+	private Pose2d lastObject;
 
 	public NoteHunterCommand(VisionSubsystem vision, DriveSubsystem drive) {
 		this.drive = drive;
@@ -64,11 +69,12 @@ public class NoteHunterCommand extends Command {
 		SmartDashboard.putBoolean("NoteHunter/hasTargets", rawPiece.hasTargets());
 		PhotonTrackedTarget piece = rawPiece.getBestTarget();
 		if (piece != null) {
-			Transform2d trans = new Transform2d(piece.getBestCameraToTarget().getTranslation().toTranslation2d(),
-					piece.getBestCameraToTarget().getRotation().toRotation2d());
+			this.lastObject = this.vision.targetToField(piece.getBestCameraToTarget(), this.drive.getPose()).toPose2d();
+		}if(lastObject != null){
+			Transform2d trans = this.lastObject.minus(this.drive.getPose());
 			double x = trans.getX();
 			double y = trans.getY();
-			double theta = trans.getRotation().getDegrees();
+			double theta = Math.toDegrees(Math.atan2(trans.getY(), trans.getX()));
 
 			SmartDashboard.putNumber("NoteHunter/currentTheta", theta);
 			// var rawXOutput = this.xPID.calculate(x);
@@ -83,7 +89,8 @@ public class NoteHunterCommand extends Command {
 			SmartDashboard.putNumber("NoteHunter/thetaOutput", thetaOutput);
 			SmartDashboard.putNumber("NoteHunter/goal", 0);
 			this.drive.drive(0, 0, -thetaOutput, false, true);
-		} else {
+		}
+		else {
 			this.drive.drive(0, 0, 0, false, true);
 		}
 	}
