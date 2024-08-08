@@ -41,6 +41,8 @@ public interface ControlBoard {
 
 	public Trigger AprilLockOn();
 
+	public Trigger ObjectLockOn();
+
 	public void setRumble(RumbleType type, double value);
 
 }

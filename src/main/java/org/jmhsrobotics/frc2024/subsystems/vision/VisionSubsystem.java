@@ -37,7 +37,8 @@ public class VisionSubsystem extends SubsystemBase implements Logged {
 	private AprilTagFieldLayout layout;
 
 	// declare the camera
-	private PhotonCamera cam, objectCamera;
+	private PhotonCamera cam;
+	public PhotonCamera objectCamera;
 
 	// get the camera position on the robot
 	private Transform3d camOnRobot = new Transform3d(
@@ -48,6 +49,8 @@ public class VisionSubsystem extends SubsystemBase implements Logged {
 	private PhotonPoseEstimator estimator;
 
 	private DriveSubsystem drive;
+
+	private PhotonPipelineResult objectResults;
 
 	private double[] flucialIDs;
 	List<PhotonTrackedTarget> targets;
@@ -81,6 +84,7 @@ public class VisionSubsystem extends SubsystemBase implements Logged {
 
 		targets = results.getTargets();
 
+		SmartDashboard.putBoolean("Vision/isObjectCamConnected", this.objectCamera.isConnected());
 		SmartDashboard.putBoolean("Vision/isConnected", this.cam.isConnected());
 		int len = targets.size();
 		Pose3d[] posList = new Pose3d[len];
@@ -113,7 +117,6 @@ public class VisionSubsystem extends SubsystemBase implements Logged {
 		this.estimator.setReferencePose(prevPose);
 		return this.estimator.update();
 	}
-
 	public PhotonTrackedTarget getTarget(double fiducialID) {
 		for (PhotonTrackedTarget i : targets) {
 			if (i.getFiducialId() == fiducialID) {

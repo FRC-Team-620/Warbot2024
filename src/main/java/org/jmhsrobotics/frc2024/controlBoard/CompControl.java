@@ -53,6 +53,13 @@ public class CompControl implements ControlBoard {
 			return this.driver.getLeftTriggerAxis() > 0.5;
 		});
 	}
+
+	@Override
+	public Trigger ObjectLockOn() {
+		return new Trigger(() -> {
+			return this.driver.getRightTriggerAxis() > 0.5;
+		});
+	}
 	// =============Operator Controls=============
 	public double pitchInput() {
 		return this.operator.getRightY();

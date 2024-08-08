@@ -98,5 +98,10 @@ public class SwitchableControlBoard implements ControlBoard {
 		// TODO Auto-generated method stub
 		current.setRumble(type, value);
 	}
+	@Override
+	public Trigger ObjectLockOn() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'ObjectLockOn'");
+	}
 
 }

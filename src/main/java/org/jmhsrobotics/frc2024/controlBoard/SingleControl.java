@@ -98,4 +98,10 @@ public class SingleControl implements ControlBoard {
 	public void setRumble(RumbleType type, double value) {
 		this.driver.setRumble(type, value);
 	}
+
+	@Override
+	public Trigger ObjectLockOn() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'ObjectLockOn'");
+	}
 }

@@ -28,6 +28,7 @@ import org.jmhsrobotics.frc2024.subsystems.drive.DriveSubsystem;
 import org.jmhsrobotics.frc2024.subsystems.drive.commands.DriveCommand;
 import org.jmhsrobotics.frc2024.subsystems.drive.commands.LockSpeaker;
 import org.jmhsrobotics.frc2024.subsystems.drive.commands.auto.DriveTimeCommand;
+import org.jmhsrobotics.frc2024.subsystems.drive.commands.auto.NoteHunterCommand;
 import org.jmhsrobotics.frc2024.subsystems.intake.IntakeSubsystem;
 import org.jmhsrobotics.frc2024.subsystems.intake.commands.AmpShotCommand;
 import org.jmhsrobotics.frc2024.subsystems.intake.commands.AutoIntakeCommand;
@@ -140,6 +141,7 @@ public class RobotContainer implements Logged {
 		// intakeSubsystem));
 		SmartDashboard.putData("ArmVision", new ArmVision(armSubsystem, visionSubsystem, driveSubsystem));
 		SmartDashboard.putData("Lock Speaker", new LockSpeaker(driveSubsystem, visionSubsystem));
+		SmartDashboard.putData("NoteHunter", new NoteHunterCommand(visionSubsystem, driveSubsystem));
 
 	}
 
