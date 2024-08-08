@@ -65,17 +65,22 @@ public class NoteHunterCommand extends Command {
 
 	@Override
 	public void execute() {
+		// SmartDashboard.putBoolean("NoteHunter/hasTargets", rawPiece.hasTargets());
 		PhotonPipelineResult rawPiece = this.vision.objectCamera.getLatestResult();
-		SmartDashboard.putBoolean("NoteHunter/hasTargets", rawPiece.hasTargets());
-		PhotonTrackedTarget piece = rawPiece.getBestTarget();
-		if (piece != null) {
-			this.lastObject = this.vision.targetToField(piece.getBestCameraToTarget(), this.drive.getPose()).toPose2d();
-		}if(lastObject != null){
-			Transform2d trans = this.lastObject.minus(this.drive.getPose());
-			double x = trans.getX();
-			double y = trans.getY();
-			double theta = Math.toDegrees(Math.atan2(trans.getY(), trans.getX()));
 
+		//unit unknown
+		double theta = rawPiece.getBestTarget().getYaw();
+
+		
+		// if (piece != null) {
+		// 	this.lastObject = this.vision.targetToField(piece.getBestCameraToTarget(), this.drive.getPose()).toPose2d();
+		// }if(lastObject != null){
+		// 	Transform2d trans = this.lastObject.minus(this.drive.getPose());
+		// 	double x = trans.getX();
+		// 	double y = trans.getY();
+		// 	double theta = Math.toDegrees(Math.atan2(trans.getY(), trans.getX()));
+
+		
 			SmartDashboard.putNumber("NoteHunter/currentTheta", theta);
 			// var rawXOutput = this.xPID.calculate(x);
 			// double xOutput = MathUtil.clamp(rawXOutput, -0.3, 0.3);
