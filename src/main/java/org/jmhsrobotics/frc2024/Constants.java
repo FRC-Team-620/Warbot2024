@@ -85,14 +85,15 @@ public class Constants {
 		/* START DRIVER CONFIGURABLES */
 
 		// configure to change drivetrain turbo mode
-		public static final double kMaxSpeedFeetPerSecond = 17;
+		public static final double kMaxSpeedFeetPerSecond = 12;
 
 		// configure to change drivetrain slow mode
-		public static final double slowSpeedFeetPerSecond = 12; // TODO: Remove used when not in turbo mode move to Comp
+		public static final double slowSpeedFeetPerSecond = 6; // TODO: Remove used when not in turbo mode move to
+																// Comp
 																// control later after refactor
 
 		// configure to change rotation speed
-		public static final double kMaxAngularSpeed = 8.5; // radians per second
+		public static final double kMaxAngularSpeed = 6; // radians per second
 
 		/* END DRIVER CONFIGURABLES */
 
@@ -170,14 +171,14 @@ public class Constants {
 		public static final double kTurningEncoderPositionPIDMinInput = 0; // radians
 		public static final double kTurningEncoderPositionPIDMaxInput = kTurningEncoderPositionFactor; // radians
 
-		public static final double kDrivingP = 0.45;
+		public static final double kDrivingP = 0.2;
 		public static final double kDrivingI = 0;
 		public static final double kDrivingD = 0.1;
 		public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedRps;
 		public static final double kDrivingMinOutput = -1;
 		public static final double kDrivingMaxOutput = 1;
 
-		public static final double kTurningP = 4.3;
+		public static final double kTurningP = 2;
 		public static final double kTurningI = 0;
 		public static final double kTurningD = 0.5;
 		public static final double kTurningFF = 0;
