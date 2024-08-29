@@ -1,0 +1,63 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.2541749477386477,
+      "y": 5.586578369140625
+    },
+    "rotation": 5.811871093357418e-27
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Jaillon Auto.1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Floor"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Jaillon Auto.2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Spinup no Stop"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Spinup and Shoot"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": true
+}
