@@ -52,6 +52,12 @@
         {
           "type": "named",
           "data": {
+            "name": "Arm Preset Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Spinup and Shoot"
           }
         }
