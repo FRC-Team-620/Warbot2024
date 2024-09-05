@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.245659589767456,
-      "y": 5.5926337242126465
+      "x": 1.2460380792617798,
+      "y": 5.586956977844238
     },
-    "rotation": -1.890969821193434e-27
+    "rotation": 0.0
   },
   "command": {
     "type": "sequential",
@@ -18,7 +18,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Lesson Path.1"
+                  "pathName": "Supercoolawesoepath.1"
                 }
               },
               {
@@ -33,7 +33,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Lesson Path.2"
+            "pathName": "Supercoolawesoepath.2"
           }
         },
         {
@@ -51,6 +51,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "Amp Autos",
   "choreoAuto": true
 }
