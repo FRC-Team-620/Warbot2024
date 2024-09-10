@@ -1,0 +1,62 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.25,
+      "y": 5.56
+    },
+    "rotation": -1.3284470550937092e-33
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "One Piece Preload Shoot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Floor"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BasePath.1"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BasePath.2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Arm Preset Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Spinup and Shoot"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": true
+}
