@@ -3,9 +3,9 @@
   "startingPose": {
     "position": {
       "x": 1.25,
-      "y": 5.56
+      "y": 5.535863876342773
     },
-    "rotation": -1.3284470550937092e-33
+    "rotation": 1.1551911006104163e-25
   },
   "command": {
     "type": "sequential",
@@ -22,15 +22,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "Intake Floor"
+                  "pathName": "Old Bay path.1"
                 }
               },
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "BasePath.1"
+                  "name": "Intake Floor"
                 }
               }
             ]
@@ -39,7 +39,81 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BasePath.2"
+            "pathName": "Old Bay path.2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Arm Preset Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Spinup and Shoot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Old Bay path.3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Floor"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Old Bay path.4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Arm Preset Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Spinup and Shoot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Old Bay path.5"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Floor"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Old Bay path.6"
           }
         },
         {
