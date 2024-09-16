@@ -104,6 +104,10 @@ public class DriveSubsystem extends SubsystemBase implements Logged {
 		double xSpeed = chassisSpeeds.vxMetersPerSecond / Constants.SwerveConstants.kMaxSpeedMetersPerSecond;
 		double ySpeed = chassisSpeeds.vyMetersPerSecond / Constants.SwerveConstants.kMaxSpeedMetersPerSecond;
 		double rotation = chassisSpeeds.omegaRadiansPerSecond / Constants.SwerveConstants.kMaxAngularSpeed;
+
+		if (xSpeed == 0.0 && ySpeed == 0.0 && rotation == 0.0) {
+			this.brake();
+		}
 		this.drive(xSpeed, ySpeed, rotation, false, false);
 	}
 
