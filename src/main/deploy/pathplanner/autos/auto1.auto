@@ -31,12 +31,6 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "choreo1.2"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Arm Preset Shoot"
