@@ -24,17 +24,17 @@ public class CompControl implements ControlBoard {
 
 	@Override
 	public double xInput() {
-		return this.driver.getLeftX() * (isTurbo() ? 1.0 : slowMode);
+		return (this.driver.getLeftX() * (isTurbo() ? 1.0 : slowMode)) * .8;
 	}
 
 	@Override
 	public double yInput() {
-		return this.driver.getLeftY() * (isTurbo() ? 1.0 : slowMode);
+		return (this.driver.getLeftY() * (isTurbo() ? 1.0 : slowMode)) * .8;
 	}
 
 	@Override
 	public double rotationalInput() {
-		return this.driver.getRightX() * 0.7;
+		return this.driver.getRightX() * 0.5;
 	}
 
 	@Override
