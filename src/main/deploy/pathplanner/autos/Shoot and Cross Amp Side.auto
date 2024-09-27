@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.4865800440311432,
-      "y": 6.7020978927612305
+      "x": 0.6950119733810425,
+      "y": 6.577122211456299
     },
     "rotation": 59.34933763738902
   },
@@ -21,6 +21,12 @@
           "type": "path",
           "data": {
             "pathName": "PreloadRightCrossLine.1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "PreloadRightCrossLine.2"
           }
         }
       ]
