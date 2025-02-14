@@ -3,12 +3,11 @@ package org.jmhsrobotics.frc2024.subsystems.arm;
 import org.jmhsrobotics.frc2024.Constants;
 import org.jmhsrobotics.frc2024.Constants.CAN;
 
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkAbsoluteEncoder.Type;
-import com.revrobotics.SparkLimitSwitch;
-import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.spark.SparkLimitSwitch;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -29,8 +28,9 @@ import monologue.Logged;
 public class ArmPIDSubsystem extends SubsystemBase implements Logged {
 
 	private MechanismLigament2d m_arm;
-	private CANSparkMax armPivot = new CANSparkMax(Constants.CAN.kArmPivotRightID, MotorType.kBrushless);
-	private CANSparkMax armHelper = new CANSparkMax(Constants.CAN.kArmPivotFollowerID, MotorType.kBrushless);
+	private SparkMax armPivot = new SparkMax(Constants.CAN.kArmPivotRightID, MotorType.kBrushless);
+	private SparkMax armHelper = new SparkMax(Constants.CAN.kArmPivotFollowerID, MotorType.kBrushless);
+	private SparkMaxConfig armHelperConfig = new SparkMaxConfig();
 	private SimableAbsoluteEncoder pitchEncoder;
 	private Mechanism2d mech;
 	private SparkLimitSwitch pitchSwitchF;
@@ -57,7 +57,9 @@ public class ArmPIDSubsystem extends SubsystemBase implements Logged {
 		relativeEncoder = new SimableRelativeEncoder(this.armPivot.getEncoder());
 		relativeEncoder.setPositionConversionFactor(((1.0 / 25.0) * (9.0 / 66.0)) * 360.0);
 
-		armHelper.follow(armPivot, true);
+		// armHelper.follow(armPivot, true);
+		armHelperConfig.follow(armPivot);
+		armHelper.configure(armHelperConfig, null, null);
 		pitchEncoder.setPositionConversionFactor(360);
 		double tempAngle = pitchEncoder.getPosition();
 		if (tempAngle > 270) {

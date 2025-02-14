@@ -55,7 +55,7 @@ def includeDesktopSupport = false
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 5.
 dependencies {
-    implementation 'com.github.FRC-Team-620:WarCore:v1.3'
+    implementation 'com.github.FRC-Team-620:WarCore:V1.3'
     implementation wpi.java.deps.wpilib()
     implementation wpi.java.vendor.java()
 
