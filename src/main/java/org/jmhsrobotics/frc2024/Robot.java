@@ -20,10 +20,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import monologue.Logged;
-import monologue.Monologue;
 
-public class Robot extends TimedRobot implements Logged {
+public class Robot extends TimedRobot {
 	private Command autonomousCommand;
 
 	private RobotContainer m_robotContainer;
@@ -54,13 +52,11 @@ public class Robot extends TimedRobot implements Logged {
 		BuildDataLogger.LogToWpiLib(DataLogManager.getLog(), BuildConstants.class);
 		boolean fileOnly = false;
 		boolean lazyLogging = true;
-		Monologue.setupMonologue(this, "Robot", fileOnly, lazyLogging);
 		URCL.start(getCanIDMap());
 	}
 
 	@Override
 	public void robotPeriodic() {
-		Monologue.updateAll();
 		CommandScheduler.getInstance().run();
 	}
 

@@ -11,10 +11,8 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
-import monologue.Logged;
-import monologue.Annotations.Log;
 
-public class GameObjectSim implements Logged {
+public class GameObjectSim {
 	public static final double fieldLength = Units.inchesToMeters(651.223);
 
 	public static final class StagingLocations {
@@ -47,9 +45,7 @@ public class GameObjectSim implements Logged {
 
 	// private Pose3d[] objects = new Pose3d[8];
 	public ArrayList<Pose3d> objects = new ArrayList<>();
-	@Log
 	private int numInaked = 0;
-	@Log
 	private boolean isIntaking = false;
 	private Pose2d lastRobotpos = new Pose2d();
 
@@ -88,7 +84,6 @@ public class GameObjectSim implements Logged {
 		}
 
 		lastRobotpos = robotpos;
-		log("notes", out);
 
 	}
 
