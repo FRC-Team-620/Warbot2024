@@ -1,9 +1,8 @@
 package org.jmhsrobotics.frc2024.subsystems.arm;
 
 import org.jmhsrobotics.frc2024.Constants;
+import org.jmhsrobotics.frc2024.utils.SparkMaxConfigUtils;
 
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
@@ -59,7 +58,7 @@ public class ArmPIDSubsystem extends SubsystemBase {
 		// armHelper.follow(armPivot, true);
 		armHelperConfig.follow(armPivot);
 		// armHelper.configure(armHelperConfig, null, null);
-		applyConfigInFlight(armHelper, armHelperConfig);
+		SparkMaxConfigUtils.applyConfigInFlight(armHelper, armHelperConfig);
 		pitchEncoder.setPositionConversionFactor(360);
 		double tempAngle = pitchEncoder.getPosition();
 		if (tempAngle > 270) {
@@ -145,11 +144,11 @@ public class ArmPIDSubsystem extends SubsystemBase {
 	}
 
 	public void toggleBakes() {
-		var mode = armPivot.configAccessor.getIdleMode() == IdleMode.kBrake ? IdleMode.kCoast:IdleMode.kBrake;
+		var mode = armPivot.configAccessor.getIdleMode() == IdleMode.kBrake ? IdleMode.kCoast : IdleMode.kBrake;
 		this.armPivotConfig.idleMode(mode);
 		this.armHelperConfig.idleMode(mode);
-		applyConfigInFlight(armPivot, armPivotConfig);
-		applyConfigInFlight(armHelper, armHelperConfig);
+		SparkMaxConfigUtils.applyConfigInFlight(armPivot, armPivotConfig);
+		SparkMaxConfigUtils.applyConfigInFlight(armHelper, armHelperConfig);
 	}
 
 	public void setBreak() {
@@ -157,8 +156,8 @@ public class ArmPIDSubsystem extends SubsystemBase {
 		// this.armHelperConfig.setIdleMode(IdleMode.kBrake);
 		this.armPivotConfig.idleMode(IdleMode.kBrake);
 		this.armHelperConfig.idleMode(IdleMode.kBrake);
-		applyConfigInFlight(armPivot, armPivotConfig);
-		applyConfigInFlight(armHelper, armHelperConfig);
+		SparkMaxConfigUtils.applyConfigInFlight(armPivot, armPivotConfig);
+		SparkMaxConfigUtils.applyConfigInFlight(armHelper, armHelperConfig);
 	}
 
 	private void initPid() {
@@ -231,10 +230,6 @@ public class ArmPIDSubsystem extends SubsystemBase {
 		// SmartDashboard.putNumber("ArmSubsystem/encoder", pitchEncoder.getPosition());
 		// SmartDashboard.putNumber("ArmSubsystem/relativeAngle",
 		// armPivot.getEncoder().getPosition());
-	}
-
-	private void applyConfigInFlight(SparkMax motor, SparkMaxConfig config) {
-		motor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
 	}
 
 	@Override

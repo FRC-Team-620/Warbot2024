@@ -12,10 +12,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import monologue.Logged;
 
 //TODO: move all hardcoded numbers to constants file
-public class LockSpeaker extends Command implements Logged {
+public class LockSpeaker extends Command {
 	private DriveSubsystem drive;
 	private VisionSubsystem vision;
 
