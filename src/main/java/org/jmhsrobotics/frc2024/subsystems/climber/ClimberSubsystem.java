@@ -2,42 +2,46 @@ package org.jmhsrobotics.frc2024.subsystems.climber;
 
 import org.jmhsrobotics.frc2024.Constants;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkBase.SoftLimitDirection;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import monologue.Logged;
 
-public class ClimberSubsystem extends SubsystemBase implements Logged {
-	private CANSparkMax leftClimber, rightClimber;
-	private RelativeEncoder leftClimberEncoder, rightClimberEncoder;
+public class ClimberSubsystem extends SubsystemBase {
+	private SparkMax leftClimber, rightClimber;
+	private SparkMaxConfig leftClimberConfig = new SparkMaxConfig();
+	private SparkMaxConfig rightClimberConfig = new SparkMaxConfig();
 
 	public ClimberSubsystem() {
-		leftClimber = new CANSparkMax(Constants.CAN.kLeftClimberID, MotorType.kBrushless);
-		rightClimber = new CANSparkMax(Constants.CAN.kRightClimberID, MotorType.kBrushless);
-		leftClimberEncoder = leftClimber.getEncoder();
-		rightClimberEncoder = rightClimber.getEncoder();
+		leftClimber = new SparkMax(Constants.CAN.kLeftClimberID, MotorType.kBrushless);
+		rightClimber = new SparkMax(Constants.CAN.kRightClimberID, MotorType.kBrushless);
 
-		leftClimber.restoreFactoryDefaults();
-		rightClimber.restoreFactoryDefaults();
-		leftClimber.setSmartCurrentLimit(40);
-		rightClimber.setSmartCurrentLimit(40);
+		// Set the default configuration for the left climber
+		leftClimberConfig.smartCurrentLimit(40);
+		leftClimberConfig.softLimit.reverseSoftLimit(0);
+		leftClimberConfig.softLimit.forwardSoftLimit(34);
+		leftClimberConfig.softLimit.forwardSoftLimitEnabled(true);
+		leftClimberConfig.idleMode(IdleMode.kBrake);
+		leftClimberConfig.encoder.positionConversionFactor((5.0 * 4.0) / 100.0); // 20:1 gear reduction
+
+		// Set the default configuration for the right climber
+		rightClimberConfig.smartCurrentLimit(40);
+		rightClimberConfig.softLimit.reverseSoftLimit(0);
+		rightClimberConfig.softLimit.forwardSoftLimit(34);
+		rightClimberConfig.softLimit.forwardSoftLimitEnabled(true);
+		rightClimberConfig.idleMode(IdleMode.kBrake);
+		rightClimberConfig.encoder.positionConversionFactor((5.0 * 4.0) / 100.0); // 20:1 gear reduction
+
+		// Apply the configurations
+		leftClimber.configure(leftClimberConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+		rightClimber.configure(leftClimberConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+
 		// TODO: input real vals for soft limit
-		leftClimber.setSoftLimit(SoftLimitDirection.kReverse, 0);
-		rightClimber.setSoftLimit(SoftLimitDirection.kReverse, 0);
-		leftClimber.setSoftLimit(SoftLimitDirection.kForward, 34);
-		rightClimber.setSoftLimit(SoftLimitDirection.kForward, 34);
-		setSoftLimit(true);
-		leftClimber.setIdleMode(IdleMode.kBrake);
-		rightClimber.setIdleMode(IdleMode.kBrake);
-		leftClimberEncoder.setPositionConversionFactor((5.0 * 4.0) / 100.0); // 20:1 gear reduction
-		rightClimberEncoder.setPositionConversionFactor((5.0 * 4.0) / 100.0); // 20:1 gear reduction
-
 		SmartDashboard.putNumber("climber/leftEncoder", 0);
 		SmartDashboard.putNumber("climber/rightEncoder", 0);
 
@@ -47,13 +51,17 @@ public class ClimberSubsystem extends SubsystemBase implements Logged {
 	}
 
 	public void setSoftLimit(boolean toggle) {
-		rightClimber.enableSoftLimit(SoftLimitDirection.kForward, toggle);
-		leftClimber.enableSoftLimit(SoftLimitDirection.kForward, toggle);
-		rightClimber.enableSoftLimit(SoftLimitDirection.kReverse, toggle);
-		leftClimber.enableSoftLimit(SoftLimitDirection.kReverse, toggle);
-		// rightClimberEncoder.setPosition(0);
-		// leftClimberEncoder.setPosition(0);
+		// Update the configuration
+		this.leftClimberConfig.softLimit.forwardSoftLimitEnabled(toggle);
+		this.leftClimberConfig.softLimit.reverseSoftLimitEnabled(toggle);
+		this.rightClimberConfig.softLimit.forwardSoftLimitEnabled(toggle);
+		this.rightClimberConfig.softLimit.reverseSoftLimitEnabled(toggle);
 
+		// Apply the changes
+		this.leftClimber.configure(this.leftClimberConfig, ResetMode.kNoResetSafeParameters,
+				PersistMode.kNoPersistParameters);
+		this.rightClimber.configure(this.leftClimberConfig, ResetMode.kNoResetSafeParameters,
+				PersistMode.kNoPersistParameters);
 	}
 
 	public void setLeftMotor(double amount) {
@@ -82,17 +90,19 @@ public class ClimberSubsystem extends SubsystemBase implements Logged {
 		this.leftClimber.setVoltage(0);
 		this.rightClimber.setVoltage(0);
 	}
-	public double getRightEncoderPosition() {
-		return this.rightClimberEncoder.getPosition();
+
+	// Returns the current position of the left climber
+	public double getLeftEncoderPostition() {
+		return this.leftClimber.getEncoder().getPosition();
 	}
 
-	public double getLeftEncoderPostition() {
-		return this.leftClimberEncoder.getPosition();
+	// Returns the current position of the right climber
+	public double getRightEncoderPosition() {
+		return this.rightClimber.getEncoder().getPosition();
 	}
 
 	@Override
 	public void periodic() {
 		super.periodic();
 	}
-
 }
