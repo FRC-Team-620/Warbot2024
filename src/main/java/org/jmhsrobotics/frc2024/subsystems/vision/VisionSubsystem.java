@@ -30,9 +30,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import monologue.Logged;
 
-public class VisionSubsystem extends SubsystemBase implements Logged {
+public class VisionSubsystem extends SubsystemBase {
 	// load the apriltag field layout
 	private AprilTagFieldLayout layout;
 
@@ -96,16 +95,12 @@ public class VisionSubsystem extends SubsystemBase implements Logged {
 
 		SmartDashboard.putNumberArray("Vision/flucialIDs", flucialIDs);
 		// SmartDashboard.putBooelean("hasTaget", this.);
-		log("flucialIDs", flucialIDs);
-		log("targets", posList);
-		log("cameraTransform", camOnRobot); // TODO: only log once
 
 		// Puting the estimated pose to the network table
 		var estimatedPose = this.getEstimatedGlobalPose(this.drive.getPose());
 		if (estimatedPose.isPresent()) {
 			// NT4Util.putPose3d("Vision/EstimatedTarget",
 			// estimatedPose.get().estimatedPose);
-			log("postEstimation", estimatedPose.get().estimatedPose);
 		}
 	}
 
