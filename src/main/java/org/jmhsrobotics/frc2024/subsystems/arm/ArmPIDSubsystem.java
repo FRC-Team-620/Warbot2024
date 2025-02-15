@@ -1,18 +1,17 @@
 package org.jmhsrobotics.frc2024.subsystems.arm;
 
 import org.jmhsrobotics.frc2024.Constants;
-import org.jmhsrobotics.frc2024.Constants.CAN;
 
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLimitSwitch;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
@@ -23,13 +22,13 @@ import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import monologue.Logged;
 
-public class ArmPIDSubsystem extends SubsystemBase implements Logged {
+public class ArmPIDSubsystem extends SubsystemBase {
 
 	private MechanismLigament2d m_arm;
 	private SparkMax armPivot = new SparkMax(Constants.CAN.kArmPivotRightID, MotorType.kBrushless);
 	private SparkMax armHelper = new SparkMax(Constants.CAN.kArmPivotFollowerID, MotorType.kBrushless);
+	private SparkMaxConfig armPivotConfig = new SparkMaxConfig();
 	private SparkMaxConfig armHelperConfig = new SparkMaxConfig();
 	private SimableAbsoluteEncoder pitchEncoder;
 	private Mechanism2d mech;
@@ -47,7 +46,7 @@ public class ArmPIDSubsystem extends SubsystemBase implements Logged {
 		// armHelper.setInverted(true);
 		// armPivot.setInverted(true);
 
-		pitchEncoder = new SimableAbsoluteEncoder(armPivot.getAbsoluteEncoder(Type.kDutyCycle));
+		pitchEncoder = new SimableAbsoluteEncoder(armPivot.getAbsoluteEncoder());
 		// armPivot.setSmartCurrentLimit(40);
 		// armPivot.setIdleMode(IdleMode.kBrake);
 		// armHelper.setIdleMode(IdleMode.kBrake);
@@ -59,7 +58,8 @@ public class ArmPIDSubsystem extends SubsystemBase implements Logged {
 
 		// armHelper.follow(armPivot, true);
 		armHelperConfig.follow(armPivot);
-		armHelper.configure(armHelperConfig, null, null);
+		// armHelper.configure(armHelperConfig, null, null);
+		applyConfigInFlight(armHelper, armHelperConfig);
 		pitchEncoder.setPositionConversionFactor(360);
 		double tempAngle = pitchEncoder.getPosition();
 		if (tempAngle > 270) {
@@ -74,33 +74,47 @@ public class ArmPIDSubsystem extends SubsystemBase implements Logged {
 		// temp, voltage,current - 20ms
 		// armPivot.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 20); // Rel pos -
 		// 20ms
-		armPivot.setPeriodicFramePeriod(PeriodicFrame.kStatus3, CAN.kMaxFramePeriodMs); // Analog sensor volts, vel, acc
-																						// - 50ms
-		armPivot.setPeriodicFramePeriod(PeriodicFrame.kStatus4, CAN.kMaxFramePeriodMs); // Alternate Encoder Vel/pos -
-																						// 20ms
-		armPivot.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20); // Duty Cycle Absolute Encoder Position/ angle -
-																		// 200ms
-		armPivot.setPeriodicFramePeriod(PeriodicFrame.kStatus6, CAN.kMaxFramePeriodMs); // Duty Cycle Absolute Encoder
-																						// Velocity/
-		// freequency - 200ms
-		armPivot.setPeriodicFramePeriod(PeriodicFrame.kStatus7, CAN.kMaxFramePeriodMs); // I accumm
+		armPivotConfig.signals.absoluteEncoderPositionPeriodMs(20);
+		// armPivotConfig.setPeriodicFramePeriod(PeriodicFrame.kStatus3,
+		// CAN.kMaxFramePeriodMs); // Analog sensor volts, vel, acc
+		// // - 50ms
+		// armPivot.setPeriodicFramePeriod(PeriodicFrame.kStatus4,
+		// CAN.kMaxFramePeriodMs); // Alternate Encoder Vel/pos -
+		// // 20ms
+		// armPivot.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20); // Duty Cycle
+		// Absolute Encoder Position/ angle -
+		// // 200ms
+		// armPivot.setPeriodicFramePeriod(PeriodicFrame.kStatus6,
+		// CAN.kMaxFramePeriodMs); // Duty Cycle Absolute Encoder
+		// // Velocity/
+		// // freequency - 200ms
+		// armPivot.setPeriodicFramePeriod(PeriodicFrame.kStatus7,
+		// CAN.kMaxFramePeriodMs); // I accumm
 
-		// optimize Can Traffic
-		armHelper.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20); // applied output, faults, sticky faults,
-																		// isfollower - 10ms
-		armHelper.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 200); // Velocity, temp, voltage,current - 20ms
-		armHelper.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 200); // Rel pos - 20ms
-		armHelper.setPeriodicFramePeriod(PeriodicFrame.kStatus3, CAN.kMaxFramePeriodMs); // Analog sensor volts, vel,
-																							// acc - 50ms
-		armHelper.setPeriodicFramePeriod(PeriodicFrame.kStatus4, CAN.kMaxFramePeriodMs); // Alternate Encoder Vel/pos -
-																							// 20ms
-		armHelper.setPeriodicFramePeriod(PeriodicFrame.kStatus5, CAN.kMaxFramePeriodMs); // Duty Cycle Absolute Encoder
-																							// Position/ angle
-		// - 200ms
-		armHelper.setPeriodicFramePeriod(PeriodicFrame.kStatus6, CAN.kMaxFramePeriodMs); // Duty Cycle Absolute Encoder
-																							// Velocity/
-		// freequency - 200ms
-		armHelper.setPeriodicFramePeriod(PeriodicFrame.kStatus7, CAN.kMaxFramePeriodMs); // I accumm
+		// // optimize Can Traffic
+		// armHelper.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 20); // applied
+		// output, faults, sticky faults,
+		// // isfollower - 10ms
+		// armHelper.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 200); // Velocity,
+		// temp, voltage,current - 20ms
+		// armHelper.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 200); // Rel pos -
+		// 20ms
+		// armHelper.setPeriodicFramePeriod(PeriodicFrame.kStatus3,
+		// CAN.kMaxFramePeriodMs); // Analog sensor volts, vel,
+		// // acc - 50ms
+		// armHelper.setPeriodicFramePeriod(PeriodicFrame.kStatus4,
+		// CAN.kMaxFramePeriodMs); // Alternate Encoder Vel/pos -
+		// // 20ms
+		// armHelper.setPeriodicFramePeriod(PeriodicFrame.kStatus5,
+		// CAN.kMaxFramePeriodMs); // Duty Cycle Absolute Encoder
+		// // Position/ angle
+		// // - 200ms
+		// armHelper.setPeriodicFramePeriod(PeriodicFrame.kStatus6,
+		// CAN.kMaxFramePeriodMs); // Duty Cycle Absolute Encoder
+		// // Velocity/
+		// // freequency - 200ms
+		// armHelper.setPeriodicFramePeriod(PeriodicFrame.kStatus7,
+		// CAN.kMaxFramePeriodMs); // I accumm
 
 		// armPivot.setSoftLimit(SoftLimitDirection.kReverse, 2);
 		// armPivot.setSoftLimit(SoftLimitDirection.kForward, 120);
@@ -129,14 +143,22 @@ public class ArmPIDSubsystem extends SubsystemBase implements Logged {
 		// this.armPID.setGoal(angle);
 		this.angle = angle;
 	}
+
 	public void toggleBakes() {
-		var mode = this.armPivot.getIdleMode() == IdleMode.kBrake ? IdleMode.kCoast : IdleMode.kBrake;
-		this.armPivot.setIdleMode(mode);
-		this.armHelper.setIdleMode(mode);
+		var mode = armPivot.configAccessor.getIdleMode() == IdleMode.kBrake ? IdleMode.kCoast:IdleMode.kBrake;
+		this.armPivotConfig.idleMode(mode);
+		this.armHelperConfig.idleMode(mode);
+		applyConfigInFlight(armPivot, armPivotConfig);
+		applyConfigInFlight(armHelper, armHelperConfig);
 	}
+
 	public void setBreak() {
-		this.armPivot.setIdleMode(IdleMode.kBrake);
-		this.armHelper.setIdleMode(IdleMode.kBrake);
+		// this.armPivotConfig.setIdleMode(IdleMode.kBrake);
+		// this.armHelperConfig.setIdleMode(IdleMode.kBrake);
+		this.armPivotConfig.idleMode(IdleMode.kBrake);
+		this.armHelperConfig.idleMode(IdleMode.kBrake);
+		applyConfigInFlight(armPivot, armPivotConfig);
+		applyConfigInFlight(armHelper, armHelperConfig);
 	}
 
 	private void initPid() {
@@ -211,6 +233,10 @@ public class ArmPIDSubsystem extends SubsystemBase implements Logged {
 		// armPivot.getEncoder().getPosition());
 	}
 
+	private void applyConfigInFlight(SparkMax motor, SparkMaxConfig config) {
+		motor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+	}
+
 	@Override
 	public void periodic() {
 		this.calculatePiditeration();
@@ -218,12 +244,14 @@ public class ArmPIDSubsystem extends SubsystemBase implements Logged {
 		this.updateOdometry();
 
 		m_arm.setAngle(getArmPitch());
-		log("armComponent", new Pose3d(-0.213, 0, 0.286, new Rotation3d(0, -Units.degreesToRadians(getArmPitch()), 0)));
-		log("armComponent_Goal",
-				new Pose3d(-0.213, 0, 0.286, new Rotation3d(0, -Units.degreesToRadians(armPID.getGoal().position), 0)));
-		log("angleDegrees", getArmPitch());
-		log("angleGoalDegrees", armPID.getGoal().position);
-		log("ArmAtGoal", this.atGoal());
+		// log("armComponent", new Pose3d(-0.213, 0, 0.286, new Rotation3d(0,
+		// -Units.degreesToRadians(getArmPitch()), 0)));
+		// log("armComponent_Goal",
+		// new Pose3d(-0.213, 0, 0.286, new Rotation3d(0,
+		// -Units.degreesToRadians(armPID.getGoal().position), 0)));
+		// log("angleDegrees", getArmPitch());
+		// log("angleGoalDegrees", armPID.getGoal().position);
+		// log("ArmAtGoal", this.atGoal());
 	}
 
 	SingleJointedArmSim armSim;
