@@ -18,36 +18,33 @@ public class ClimberSubsystem extends SubsystemBase {
 	private SparkMaxConfig rightClimberConfig = new SparkMaxConfig();
 
 	public ClimberSubsystem() {
-		leftClimber = new SparkMax(Constants.CAN.kLeftClimberID, MotorType.kBrushless);
-		rightClimber = new SparkMax(Constants.CAN.kRightClimberID, MotorType.kBrushless);
+		// Create an instance of the climbers
+		this.leftClimber = new SparkMax(Constants.CAN.kLeftClimberID, MotorType.kBrushless);
+		this.rightClimber = new SparkMax(Constants.CAN.kRightClimberID, MotorType.kBrushless);
 
 		// Set the default configuration for the left climber
-		leftClimberConfig.smartCurrentLimit(40);
-		leftClimberConfig.softLimit.reverseSoftLimit(0);
-		leftClimberConfig.softLimit.forwardSoftLimit(34);
-		leftClimberConfig.softLimit.forwardSoftLimitEnabled(true);
-		leftClimberConfig.idleMode(IdleMode.kBrake);
-		leftClimberConfig.encoder.positionConversionFactor((5.0 * 4.0) / 100.0); // 20:1 gear reduction
+		this.leftClimberConfig.smartCurrentLimit(40);
+		this.leftClimberConfig.softLimit.reverseSoftLimit(0);
+		this.leftClimberConfig.softLimit.forwardSoftLimit(34);
+		this.leftClimberConfig.softLimit.forwardSoftLimitEnabled(true);
+		this.leftClimberConfig.idleMode(IdleMode.kBrake);
+		this.leftClimberConfig.encoder.positionConversionFactor((5.0 * 4.0) / 100.0); // 20:1 gear reduction
 
 		// Set the default configuration for the right climber
-		rightClimberConfig.smartCurrentLimit(40);
-		rightClimberConfig.softLimit.reverseSoftLimit(0);
-		rightClimberConfig.softLimit.forwardSoftLimit(34);
-		rightClimberConfig.softLimit.forwardSoftLimitEnabled(true);
-		rightClimberConfig.idleMode(IdleMode.kBrake);
-		rightClimberConfig.encoder.positionConversionFactor((5.0 * 4.0) / 100.0); // 20:1 gear reduction
+		this.rightClimberConfig.smartCurrentLimit(40);
+		this.rightClimberConfig.softLimit.reverseSoftLimit(0);
+		this.rightClimberConfig.softLimit.forwardSoftLimit(34);
+		this.rightClimberConfig.softLimit.forwardSoftLimitEnabled(true);
+		this.rightClimberConfig.idleMode(IdleMode.kBrake);
+		this.rightClimberConfig.encoder.positionConversionFactor((5.0 * 4.0) / 100.0); // 20:1 gear reduction
 
 		// Apply the configurations
-		leftClimber.configure(leftClimberConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
-		rightClimber.configure(leftClimberConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+		this.leftClimber.configure(leftClimberConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+		this.rightClimber.configure(leftClimberConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
 
 		// TODO: input real vals for soft limit
 		SmartDashboard.putNumber("climber/leftEncoder", 0);
 		SmartDashboard.putNumber("climber/rightEncoder", 0);
-
-		// climber.setInverted(true);
-
-		// rightClimber.follow(leftClimber, true);
 	}
 
 	public void setSoftLimit(boolean toggle) {
