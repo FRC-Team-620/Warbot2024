@@ -5,8 +5,8 @@
 package org.jmhsrobotics.frc2024.subsystems.drive;
 
 import org.jmhsrobotics.frc2024.Constants;
-import org.jmhsrobotics.frc2024.Robot;
 import org.jmhsrobotics.frc2024.Constants.SwerveConstants;
+import org.jmhsrobotics.frc2024.Robot;
 import org.jmhsrobotics.frc2024.subsystems.drive.swerve.ISwerveModule;
 import org.jmhsrobotics.frc2024.subsystems.drive.swerve.MAXSwerveModule;
 import org.jmhsrobotics.frc2024.subsystems.drive.swerve.RevSwerveDrive;
@@ -19,19 +19,15 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer.Range;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import monologue.Logged;
-import monologue.Annotations.Log;
 
-public class DriveSubsystem extends SubsystemBase implements Logged {
+public class DriveSubsystem extends SubsystemBase {
 	// Create MAXSwerveModules
 	// Test
 	private ISwerveModule m_frontLeft;
@@ -47,7 +43,6 @@ public class DriveSubsystem extends SubsystemBase implements Logged {
 	private final BuiltInAccelerometer rio_Accelerometer = new BuiltInAccelerometer(Range.k8G);
 	// Create RevSwerveDrive
 	private final RevSwerveDrive swerveDrive;
-	@Log
 	private Pose2d pose2d = new Pose2d();
 
 	/** Creates a new DriveSubsystem. */
@@ -86,14 +81,14 @@ public class DriveSubsystem extends SubsystemBase implements Logged {
 		pose2d = swerveDrive.getPose();
 
 		// log("");
-		log("Y-Gs", m_gyro.getAccelerationY().getValue());
-		log("X-Gs", m_gyro.getAccelerationX().getValue());
-		log("Z-Gs", m_gyro.getAccelerationZ().getValue());
+		// log("Y-Gs", m_gyro.getAccelerationY().getValue());
+		// log("X-Gs", m_gyro.getAccelerationX().getValue());
+		// log("Z-Gs", m_gyro.getAccelerationZ().getValue());
 
-		log("Y-Gs-rio", rio_Accelerometer.getY());
-		log("X-Gs-rio", rio_Accelerometer.getX());
-		log("Z-Gs-rio", rio_Accelerometer.getZ());
-		SmartDashboard.putNumber("GyroAngle", m_gyro.getAngle());
+		// log("Y-Gs-rio", rio_Accelerometer.getY());
+		// log("X-Gs-rio", rio_Accelerometer.getX());
+		// log("Z-Gs-rio", rio_Accelerometer.getZ());
+		SmartDashboard.putNumber("GyroAngle", m_gyro.getYaw().getValueAsDouble());
 
 		if (Robot.isSimulation()) {
 			Robot.objSim.update(pose2d);
@@ -182,17 +177,21 @@ public class DriveSubsystem extends SubsystemBase implements Logged {
 	public Pose2d simpos = new Pose2d();
 	@Override
 	public void simulationPeriodic() {
-		var prevPos = new SwerveDriveWheelPositions(new SwerveModulePosition[]{m_frontLeft.getPosition(),
-				m_frontRight.getPosition(), m_rearLeft.getPosition(), m_rearRight.getPosition()}).copy();
-		m_frontLeft.update(Constants.ksimDtSec);
-		m_frontRight.update(Constants.ksimDtSec);
-		m_rearLeft.update(Constants.ksimDtSec);
-		m_rearRight.update(Constants.ksimDtSec);
-		var currpos = new SwerveDriveWheelPositions(new SwerveModulePosition[]{m_frontLeft.getPosition(),
-				m_frontRight.getPosition(), m_rearLeft.getPosition(), m_rearRight.getPosition()}).copy();
-		var twist = SwerveConstants.kDriveKinematics.toTwist2d(prevPos, currpos);
-		simpos = getPose().exp(twist);
-		imuSim.addYaw(Math.toDegrees(twist.dtheta));
+		// var prevPos = new SwerveDriveWheelPositions(new
+		// SwerveModulePosition[]{m_frontLeft.getPosition(),
+		// m_frontRight.getPosition(), m_rearLeft.getPosition(),
+		// m_rearRight.getPosition()}).copy();
+		// m_frontLeft.update(Constants.ksimDtSec);
+		// m_frontRight.update(Constants.ksimDtSec);
+		// m_rearLeft.update(Constants.ksimDtSec);
+		// m_rearRight.update(Constants.ksimDtSec);
+		// var currpos = new SwerveDriveWheelPositions(new
+		// SwerveModulePosition[]{m_frontLeft.getPosition(),
+		// m_frontRight.getPosition(), m_rearLeft.getPosition(),
+		// m_rearRight.getPosition()}).copy();
+		// var twist = SwerveConstants.kDriveKinematics.toTwist2d(prevPos, currpos);
+		// simpos = getPose().exp(twist);
+		// imuSim.addYaw(Math.toDegrees(twist.dtheta));
 	}
 
 	public Pose2d getPose() {

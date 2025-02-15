@@ -18,9 +18,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import monologue.Logged;
 
-public class RevSwerveDrive implements Logged {
+public class RevSwerveDrive {
 
 	// Create MAXSwerveModules
 	private ISwerveModule m_frontLeft, m_frontRight, m_rearLeft, m_rearRight;
@@ -66,7 +65,8 @@ public class RevSwerveDrive implements Logged {
 	 */
 	private Rotation2d getRawGyro() {
 		// return this.getPose().getRotation();
-		return Rotation2d.fromDegrees(m_gyro.getYaw().getValue());
+		// return Rotation2d.fromDegrees(m_gyro.getYaw().getValue());
+		return Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble());
 	}
 
 	/**
@@ -160,10 +160,12 @@ public class RevSwerveDrive implements Logged {
 
 		// feedWatchdog(); // Make motor MotorSafety.feed() Happy
 		// Update visualizer
-		log("targetStates", new SwerveModuleState[]{m_frontLeft.getDesiredState(), m_frontRight.getDesiredState(),
-				m_rearLeft.getDesiredState(), m_rearRight.getDesiredState()});
-		log("realStates", new SwerveModuleState[]{m_frontLeft.getState(), m_frontRight.getState(),
-				m_rearLeft.getState(), m_rearRight.getState()});
+		// log("targetStates", new SwerveModuleState[]{m_frontLeft.getDesiredState(),
+		// m_frontRight.getDesiredState(),
+		// m_rearLeft.getDesiredState(), m_rearRight.getDesiredState()});
+		// log("realStates", new SwerveModuleState[]{m_frontLeft.getState(),
+		// m_frontRight.getState(),
+		// m_rearLeft.getState(), m_rearRight.getState()});
 		m_visualizer.update(m_frontLeft.getState().angle, m_frontRight.getState().angle, m_rearLeft.getState().angle,
 				m_rearRight.getState().angle, getPose());
 	}

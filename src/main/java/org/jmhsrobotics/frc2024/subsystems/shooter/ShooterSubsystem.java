@@ -2,27 +2,30 @@ package org.jmhsrobotics.frc2024.subsystems.shooter;
 
 import org.jmhsrobotics.frc2024.Constants;
 import org.jmhsrobotics.frc2024.Robot;
+import org.jmhsrobotics.frc2024.utils.SparkMaxConfigUtils;
 import org.jmhsrobotics.warcore.rev.RevEncoderSimWrapper;
 
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.BangBangController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import monologue.Logged;
 
-public class ShooterSubsystem extends SubsystemBase implements Logged {
-	private CANSparkMax topFlywheel = new CANSparkMax(Constants.CAN.kShooterTopId, MotorType.kBrushless);
-	private CANSparkMax bottomFlywheel = new CANSparkMax(Constants.CAN.kShooterBottomId, MotorType.kBrushless);;
+public class ShooterSubsystem extends SubsystemBase {
+	private SparkMax topFlywheel = new SparkMax(Constants.CAN.kShooterTopId, MotorType.kBrushless);
+	private SparkMax bottomFlywheel = new SparkMax(Constants.CAN.kShooterBottomId, MotorType.kBrushless);
+	private SparkMaxConfig topFlywheelConfig = new SparkMaxConfig();
+	private SparkMaxConfig bottomFlywheelConfig = new SparkMaxConfig();
+
 	private RelativeEncoder topEncoder;
 	private RelativeEncoder bottomEncoder;
 
@@ -87,12 +90,12 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
 				break;
 
 		}
-		log("controlType", this.controlType.toString());
-		log("reference", this.reference);
-		log("topFlywheelDutyCycle", topFlywheel.get());
-		log("topflywheelSpeed", getRPM());
-		log("bottomflywheelSpeed", getBottomRRPM());
-		log("AtGoal", this.atGoal());
+		// log("controlType", this.controlType.toString());
+		// log("reference", this.reference);
+		// log("topFlywheelDutyCycle", topFlywheel.get());
+		// log("topflywheelSpeed", getRPM());
+		// log("bottomflywheelSpeed", getBottomRRPM());
+		// log("AtGoal", this.atGoal());
 
 	}
 
@@ -138,20 +141,29 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
 
 	private void initializeMotors() {
 		// this.topFlywheel.restoreFactoryDefaults();
-		this.topFlywheel.setIdleMode(IdleMode.kCoast);
-		this.topFlywheel.setSmartCurrentLimit(60);
-		this.topFlywheel.setOpenLoopRampRate(0);
-		this.topEncoder = topFlywheel.getEncoder();
-		this.topEncoder.setAverageDepth(2);
-		this.topEncoder.setMeasurementPeriod(16);
+		this.topFlywheelConfig.idleMode(IdleMode.kCoast).smartCurrentLimit(60).openLoopRampRate(0);
+		this.bottomFlywheelConfig.encoder.uvwAverageDepth(2).uvwMeasurementPeriod(16);
+
+		this.bottomFlywheelConfig.idleMode(IdleMode.kCoast).smartCurrentLimit(60).openLoopRampRate(0);
+		this.bottomFlywheelConfig.encoder.uvwAverageDepth(2).uvwMeasurementPeriod(16);
+
+		SparkMaxConfigUtils.applyConfigInFlight(topFlywheel, topFlywheelConfig);
+		SparkMaxConfigUtils.applyConfigInFlight(bottomFlywheel, bottomFlywheelConfig);
+
+		// this.topFlywheel.setIdleMode(IdleMode.kCoast);
+		// this.topFlywheel.setSmartCurrentLimit(60);
+		// this.topFlywheel.setOpenLoopRampRate(0);
+		// this.topEncoder = topFlywheel.getEncoder();
+		// this.topEncoder.setAverageDepth(2);
+		// this.topEncoder.setMeasurementPeriod(16);
 
 		// this.bottomFlywheel.restoreFactoryDefaults();
-		this.bottomFlywheel.setIdleMode(IdleMode.kCoast);
-		this.bottomFlywheel.setSmartCurrentLimit(60);
-		this.bottomFlywheel.setOpenLoopRampRate(0);
-		this.bottomEncoder = bottomFlywheel.getEncoder();
-		this.bottomEncoder.setAverageDepth(2);
-		this.bottomEncoder.setMeasurementPeriod(16);
+		// this.bottomFlywheel.setIdleMode(IdleMode.kCoast);
+		// this.bottomFlywheel.setSmartCurrentLimit(60);
+		// this.bottomFlywheel.setOpenLoopRampRate(0);
+		// this.bottomEncoder = bottomFlywheel.getEncoder();
+		// this.bottomEncoder.setAverageDepth(2);
+		// this.bottomEncoder.setMeasurementPeriod(16);
 
 		// this.bottomFlywheel.follow(topFlywheel);
 	}
@@ -161,7 +173,7 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
 	private double simVelocity = 0;
 
 	public void initSim() {
-		flywheelSim = new FlywheelSim(DCMotor.getNEO(1), 1, 0.002);
+		// flywheelSim = new FlywheelSim(DCMotor.getNEO(1), 1, 0.002);
 		encSim = RevEncoderSimWrapper.create(topFlywheel);
 	}
 

@@ -7,9 +7,8 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.AddressableLEDSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import monologue.Logged;
 
-public class LEDSubsystem extends SubsystemBase implements Logged {
+public class LEDSubsystem extends SubsystemBase {
 	private AddressableLED led;
 	private AddressableLEDBuffer ledBuffer;
 
